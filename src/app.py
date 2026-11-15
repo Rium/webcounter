@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, request
 from counter import Counter
 
 app = Flask(__name__)
@@ -8,7 +8,7 @@ cnt = Counter()
 def index():
     return render_template("index.html", value=cnt.value)
 
-@app.route("/increment", methods=["POST"])
+@app.route("/increment", methods=["POST"]) # Why is this called increment when it calls counter.increase?
 def increment():
     cnt.increase()
     return redirect("/")
@@ -16,4 +16,10 @@ def increment():
 @app.route("/reset", methods=["POST"])
 def reset():
     cnt.reset()
+    return redirect("/")
+
+@app.route("/set", methods=["POST"])
+def set():
+    amount = request.form["amount"]
+    cnt.increment(int(amount))
     return redirect("/")
